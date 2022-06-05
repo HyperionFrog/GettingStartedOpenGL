@@ -133,10 +133,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Dependencies\glad\src\glad.c" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\Source.cpp" />
+    <ClCompile Include="vendor\glad.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core.h" />

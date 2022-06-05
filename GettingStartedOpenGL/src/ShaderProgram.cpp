@@ -110,6 +110,7 @@ bool ShaderProgram::CompileAndLink(const char* vertexShaderFile, const char* fra
 			shaderVar.shaderProgramId = program;
 			allShaderVariableLocations.emplace(shaderVar);
 		}
+
 	}
 
 	programId = program;
