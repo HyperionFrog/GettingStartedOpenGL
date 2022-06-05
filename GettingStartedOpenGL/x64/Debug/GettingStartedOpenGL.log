@@ -1,0 +1,4 @@
+﻿  Source.cpp
+E:\Coding\VS 2022\GettingStartedOpenGL\GettingStartedOpenGL\vendor\robin_hood.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+E:\Coding\VS 2022\GettingStartedOpenGL\GettingStartedOpenGL\src\Source.cpp(139,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  GettingStartedOpenGL.vcxproj -> E:\Coding\VS 2022\GettingStartedOpenGL\x64\Debug\GettingStartedOpenGL.exe
