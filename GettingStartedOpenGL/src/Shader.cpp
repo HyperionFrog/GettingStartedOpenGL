@@ -1,8 +1,5 @@
 #include "include/Shader.h"
 
-// Forward Declarations
-static std::string ReadFile(std::string_view filepath);
-
 bool Shader::compile(ShaderType type, std::string_view shaderFilepath)
 {
 	// Report compilation
@@ -84,24 +81,4 @@ GLenum Shader::toGlShaderType(ShaderType type)
 		return GL_FRAGMENT_SHADER;
 	}
 	return GL_INVALID_ENUM;
-}
-
-static std::string ReadFile(std::string_view filepath)
-{
-	std::string result;
-	std::ifstream in(filepath.data(), std::ios::in | std::ios::binary);
-	if (in)
-	{
-		in.seekg(0, std::ios::end);
-		result.resize(in.tellg());
-		in.seekg(0, std::ios::beg);
-		in.read(&result[0], result.size());
-		in.close();
-	}
-	else
-	{
-	std::cout <<  "Could not open file: " << filepath << '\n';
-	}
-
-	return result;
 }
