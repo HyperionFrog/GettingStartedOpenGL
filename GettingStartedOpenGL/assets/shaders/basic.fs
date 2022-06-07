@@ -1,16 +1,15 @@
 // Fragment shader
 #version 460 core
 
-out vec4 FragColor;
+in vec3 o_frag_coord;
+in vec2 o_tex_coord;
 
-in vec3 ofragCoord;
+out vec4 frag_color;
 
-
-//uniform vec3 uColor;
+//uniform vec3 u_color;
+uniform sampler2D u_texture;
 
 void main()
 {
-    //FragColor = vec4(uColor, 1.0);
-	
-	FragColor = vec4(ofragCoord, 1.0);
+	frag_color = texture(u_texture, o_tex_coord);
 }

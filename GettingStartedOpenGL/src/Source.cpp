@@ -9,7 +9,9 @@ void ProcessInput(GLFWwindow* window);
 
 struct Vertex
 {
-    std::array<float, 3> position;
+    glm::vec3 position;
+    glm::vec3 color;
+    glm::vec2 tex_coord;
 };
 
 int main()
@@ -50,17 +52,17 @@ int main()
 
     std::array<Vertex, 3> triangle =
     {
-        Vertex{-0.5f, -0.5f, 0.0f},  // left
-        Vertex{0.0f,  0.5f, 0.0f },  // top
-        Vertex{0.5f, -0.5f, 0.0f }   // right
+        Vertex{glm::vec3(-0.5f, -0.5f, 0.0f)},  // left
+        Vertex{glm::vec3( 0.0f,  0.5f, 0.0f)},  // top
+        Vertex{glm::vec3( 0.5f, -0.5f, 0.0f)}   // right
     };
 
     std::array<Vertex, 4> rectangle =
     {
-        Vertex{-0.5f, -0.5f, 0.0f}, // bottom left
-        Vertex{-0.5f,  0.5f, 0.0f}, // top left
-        Vertex{ 0.5f,  0.5f, 0.0f}, // top right
-        Vertex{ 0.5f, -0.5f, 0.0f}  // bottom right
+        Vertex{glm::vec3(-0.5f, -0.5f, 0.0f),  glm::vec3(1.0f, 0.0f, 0.0f),  glm::vec2(0.0f, 0.0f) }, // bottom left
+        Vertex{glm::vec3(-0.5f,  0.5f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(0.0f, 1.0f) }, // top left
+        Vertex{glm::vec3( 0.5f,  0.5f, 0.0f),  glm::vec3(0.0f, 0.0f, 1.0f),  glm::vec2(1.0f, 1.0f) }, // top right
+        Vertex{glm::vec3( 0.5f, -0.5f, 0.0f),  glm::vec3(1.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) }  // bottom right
     };
 
     std::array<uint32_t, 6> indices_of_rectangle =
@@ -87,36 +89,30 @@ int main()
 
     // bind VBO
     glBindBuffer(GL_ARRAY_BUFFER, myVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle), rectangle.data(), GL_STATIC_DRAW);
 
     // bind EBO
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triangle), triangle.data(), GL_STATIC_DRAW);
-
-    // configure vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)offsetof(Vertex, position));
-    glEnableVertexAttribArray(0);
-    
-    // unbind objects
-    glBindBuffer(GL_ARRAY_BUFFER, 0);  // recommended
-    glBindVertexArray(0);  // optional
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices_of_rectangle), indices_of_rectangle.data(), GL_STATIC_DRAW);
 
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
-    //unsigned int texture;
-    //glGenTextures(1, &texture);
-    //glBindTexture(GL_TEXTURE_2D, texture);
-    //// set the texture wrapping/filtering options (on the currently bound texture object)
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // set the texture wrapping/filtering options (on the currently bound texture object)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    // Set to flip the y-axis so that the image isn't upside-down
+	stbi_set_flip_vertically_on_load(true);
     // load and generate the texture
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("assets/textures/Kurisu.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -128,6 +124,18 @@ int main()
     }
     stbi_image_free(data);
 
+    // configure vertex attributes
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coord));
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+    // unbind objects
+    glBindBuffer(GL_ARRAY_BUFFER, 0);  // recommended
+    glBindVertexArray(0);  // optional
+
     // render Loop
     while (!glfwWindowShouldClose(window)) // when the window is on, do the followings
     {
@@ -136,11 +144,10 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        float x_offset = sin( glfwGetTime() ) / 2.0f;
-        shader.UploadFloat( "uOffset", x_offset);
+        glBindTexture(GL_TEXTURE_2D, texture);
         shader.Bind();
         glBindVertexArray(myVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
