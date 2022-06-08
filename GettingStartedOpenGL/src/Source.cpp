@@ -6,6 +6,7 @@
 
 void Framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void ProcessInput(GLFWwindow* window);
+void PrintMaximumVertexAttributes();
 
 struct Vertex
 {
@@ -16,6 +17,7 @@ struct Vertex
 
 int main()
 {
+    // ----------------------------------------------------------------------------------
     glfwInit();  
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -44,11 +46,11 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+    // ----------------------------------------------------------------------------------
 
 
     ShaderProgram shader;
 	shader.CompileAndLink("assets/shaders/basic.vs", "assets/shaders/basic.fs");
-
 
     std::array<Vertex, 3> triangle =
     {
@@ -95,7 +97,7 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices_of_rectangle), indices_of_rectangle.data(), GL_STATIC_DRAW);
 
-
+    // Uncomment the following to enable frame mode;
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
@@ -112,16 +114,17 @@ int main()
 	stbi_set_flip_vertically_on_load(true);
     // load and generate the texture
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("assets/textures/Kurisu.jpg", &width, &height, &nrChannels, 0);
+    uint8 *data = stbi_load("assets/textures/Kurisu.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
     {
         std::cout << "Failed to load texture" << std::endl;
     }
+
     stbi_image_free(data);
 
     // configure vertex attributes
@@ -134,21 +137,34 @@ int main()
 
     // unbind objects
     glBindBuffer(GL_ARRAY_BUFFER, 0);  // recommended
-    glBindVertexArray(0);  // optional
 
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     // render Loop
     while (!glfwWindowShouldClose(window)) // when the window is on, do the followings
     {
         ProcessInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBindTexture(GL_TEXTURE_2D, texture);
         shader.Bind();
         glBindVertexArray(myVAO);
+
+        // Draw the picture
+        glm::mat4 trans_1 = glm::mat4(1.0f);
+        trans_1 = glm::translate(trans_1, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans_1 = glm::rotate(trans_1, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+        shader.UploadMat4("u_transform_mat", trans_1);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        glBindVertexArray(0);
+
+        // Draw again, but with different transformation
+        glm::mat4 trans_2 = glm::mat4(1.0f);
+        trans_2 = glm::scale(trans_2, glm::vec3((glm::sin(glfwGetTime()) + 3) / 4, (glm::sin(glfwGetTime()) + 3) / 4, 1.0f));
+        trans_2 = glm::translate(trans_2, glm::vec3(-0.5f, 0.5f, 0.0f));
+        shader.UploadMat4("u_transform_mat", trans_2);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+    	glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

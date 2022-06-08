@@ -92,25 +92,26 @@ bool ShaderProgram::CompileAndLink(const char* vertexShaderFile, const char* fra
 	int numUniforms;
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numUniforms);
 
-	int maxCharLength;
-	glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxCharLength);
-	if (numUniforms > 0 && maxCharLength > 0)
+	int max_char_length;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_char_length);
+	if (numUniforms > 0 && max_char_length > 0)
 	{
-		char* charBuffer = new char;
+		auto charBuffer = new char[max_char_length];
 
 		for (int i = 0; i < numUniforms; i++)
 		{
 			int length, size;
-			GLenum dataType;
-			glGetActiveUniform(program, i, maxCharLength, &length, &size, &dataType, charBuffer);
-			GLint varLocation = glGetUniformLocation(program, charBuffer);
+			GLenum data_type;
+			glGetActiveUniform(program, i, max_char_length, &length, &size, &data_type, charBuffer);
+			GLint var_location = glGetUniformLocation(program, charBuffer);
 			ShaderVariable shaderVar;
-			shaderVar.name = std::string(charBuffer, length);
-			shaderVar.var_location = varLocation;
+			shaderVar.name = charBuffer;
+			shaderVar.var_location = var_location;
 			shaderVar.shaderProgramId = program;
 			allShaderVariableLocations.emplace(shaderVar);
 		}
 
+		delete[] charBuffer;
 	}
 
 	programId = program;
