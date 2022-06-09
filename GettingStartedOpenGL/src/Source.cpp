@@ -10,8 +10,7 @@ void PrintMaximumVertexAttributes();
 
 struct Vertex
 {
-    glm::vec3 position;
-    glm::vec3 color;
+    glm::vec3 pos_coord;
     glm::vec2 tex_coord;
 };
 
@@ -61,16 +60,60 @@ int main()
 
     std::array<Vertex, 4> rectangle =
     {
-        Vertex{glm::vec3(-0.5f, -0.5f, 0.0f),  glm::vec3(1.0f, 0.0f, 0.0f),  glm::vec2(0.0f, 0.0f) }, // bottom left
-        Vertex{glm::vec3(-0.5f,  0.5f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(0.0f, 1.0f) }, // top left
-        Vertex{glm::vec3( 0.5f,  0.5f, 0.0f),  glm::vec3(0.0f, 0.0f, 1.0f),  glm::vec2(1.0f, 1.0f) }, // top right
-        Vertex{glm::vec3( 0.5f, -0.5f, 0.0f),  glm::vec3(1.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) }  // bottom right
+        Vertex{glm::vec3(-0.5f, -0.5f, 0.0f),  glm::vec2(0.0f, 0.0f) }, // bottom left
+        Vertex{glm::vec3(-0.5f,  0.5f, 0.0f),  glm::vec2(0.0f, 1.0f) }, // top left
+        Vertex{glm::vec3( 0.5f,  0.5f, 0.0f),  glm::vec2(1.0f, 1.0f) }, // top right
+        Vertex{glm::vec3( 0.5f, -0.5f, 0.0f),  glm::vec2(1.0f, 0.0f) }  // bottom right
+    };
+
+    std::array<Vertex, 36> cube = {
+    	Vertex{glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3( 0.5f, -0.5f, -0.5f),  glm::vec2(1.0f, 0.0f)},
+		Vertex{glm::vec3( 0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3( 0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+		Vertex{glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 0.0f)},
+		
+        Vertex{glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)},
+        Vertex{glm::vec3( 0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        Vertex{glm::vec3( 0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f)},
+        Vertex{glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)},
+
+        Vertex{glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        Vertex{glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)},
+        Vertex{glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+
+        Vertex{glm::vec3( 0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        Vertex{glm::vec3( 0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)},
+        Vertex{glm::vec3( 0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        
+        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f, -0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        Vertex{glm::vec3( 0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        Vertex{glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)},
+        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+        
+        Vertex{glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+        Vertex{glm::vec3( 0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        Vertex{glm::vec3( 0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+        Vertex{glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)},
+        Vertex{glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)}
     };
 
     std::array<uint32_t, 6> indices_of_rectangle =
     {
-        0, 1, 2, // first triangle, top left
-        2, 3, 0, // second triangle, bottom right
+        0, 1, 2, // first triangle, top left ¨I
+        2, 3, 0, // second triangle, bottom right ¨K
     };
 
     std::array<uint32_t, 8> indices_of_outline =
@@ -81,7 +124,7 @@ int main()
     	3, 0  // lower side
     };
 
-    uint32_t myVAO, myVBO, myEBO;
+    uint32 myVAO, myVBO, myEBO;
     glGenVertexArrays(1, &myVAO);
     glGenBuffers(1, &myVBO);
     glGenBuffers(1, &myEBO);
@@ -101,7 +144,7 @@ int main()
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
-    unsigned int texture;
+    uint32 texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     // set the texture wrapping/filtering options (on the currently bound texture object)
@@ -122,49 +165,57 @@ int main()
     }
     else
     {
-        std::cout << "Failed to load texture" << std::endl;
+        std::cerr << "Failed to load texture\n";
     }
-
     stbi_image_free(data);
 
-    // configure vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coord));
+    // Configure vertex attributes
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos_coord));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coord));
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
 
-    // unbind objects
-    glBindBuffer(GL_ARRAY_BUFFER, 0);  // recommended
+    // Unbind objects
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // recommended
+    glBindVertexArray(0); // optional
 
+    // Set clear color
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+    // Set matrices
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 projection = glm::mat4(1.0f);
+    glm::mat4 comp = glm::mat4(1.0f);
+
+    model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    projection = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
+    comp = projection * view * model;
+
+    shader.Bind();
+    shader.UploadMat4("u_model_mat", model);
+    shader.UploadMat4("u_view_mat", view);
+	shader.UploadMat4("u_projection_mat", projection);
+    shader.UploadMat4("u_comp_mat", comp);
+    shader.Unbind();
+
+    glEnable(GL_DEPTH_TEST);
+
     // render Loop
     while (!glfwWindowShouldClose(window)) // when the window is on, do the followings
     {
         ProcessInput(window);
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBindTexture(GL_TEXTURE_2D, texture);
+
         shader.Bind();
         glBindVertexArray(myVAO);
-
-        // Draw the picture
-        glm::mat4 trans_1 = glm::mat4(1.0f);
-        trans_1 = glm::translate(trans_1, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans_1 = glm::rotate(trans_1, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-        shader.UploadMat4("u_transform_mat", trans_1);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-        // Draw again, but with different transformation
-        glm::mat4 trans_2 = glm::mat4(1.0f);
-        trans_2 = glm::scale(trans_2, glm::vec3((glm::sin(glfwGetTime()) + 3) / 4, (glm::sin(glfwGetTime()) + 3) / 4, 1.0f));
-        trans_2 = glm::translate(trans_2, glm::vec3(-0.5f, 0.5f, 0.0f));
-        shader.UploadMat4("u_transform_mat", trans_2);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
     	glBindVertexArray(0);
+        shader.Unbind();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -176,7 +227,6 @@ int main()
     glDeleteBuffers(1, &myVBO);
     glDeleteBuffers(1, &myEBO);
     glDeleteProgram(shader.programId);
-
 
     glfwTerminate();
     return 0;
